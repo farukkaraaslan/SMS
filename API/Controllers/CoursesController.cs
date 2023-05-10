@@ -1,5 +1,6 @@
 ﻿using Business.Abstracts;
 using Business.Dtos.Requests;
+using Business.Dtos.Response;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,6 +23,12 @@ namespace API.Controllers
         {
             await courseService.Add(createCourseRequest);
             return Ok();
+        }
+
+        [HttpGet]
+        public async Task<GetListResponse<CourseResponse>> GetAll([FromQuery]PageRequest pageRequest)
+        {
+            return await courseService.GetAll(pageRequest);
         }
     }
 }

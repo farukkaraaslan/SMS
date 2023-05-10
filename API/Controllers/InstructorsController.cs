@@ -1,5 +1,7 @@
 ﻿using Business.Abstracts;
 using Business.Dtos.Requests;
+using Business.Dtos.Response;
+using Core.Paging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,6 +24,12 @@ namespace API.Controllers
         {
             await instructorService.Add(createInstructorRequest);
             return Ok(createInstructorRequest);
+        }
+
+        [HttpGet]
+        public Task<GetListResponse<InstructorResponse>> GetList([FromQuery] PageRequest pageRequest)
+        {
+            return instructorService.GetAll(pageRequest);
         }
     }
 }

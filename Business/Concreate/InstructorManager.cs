@@ -1,5 +1,10 @@
-﻿using Business.Abstracts;
+﻿using AutoMapper;
+using Business.Abstracts;
 using Business.Dtos.Requests;
+using Business.Dtos.Response;
+using Business.ValidationRules;
+using Core.Aspects.Validation;
+using Core.Paging;
 using DataAccess.Abstract;
 using Entities.Concreate;
 using System;
@@ -14,23 +19,26 @@ public class InstructorManager : IInstructorService
 {
     private IInstructorDal instructorDal;
 
-    public InstructorManager(IInstructorDal instructorDal)
+    private IMapper mapper;
+
+    public InstructorManager(IInstructorDal instructorDal, IMapper mapper) 
     {
-        this.instructorDal=instructorDal;
+        this.instructorDal = instructorDal;
+        this.mapper = mapper;
     }
 
+
+    [ValidationAspect(typeof(CreateInstructorRequestValidator))]
     public async Task Add(CreateInstructorRequest createInstructorRequest)
     {
-      Instructor instructor = new Instructor();
-
-        instructor.Pbik = "3637363";
-        instructor.Firstname = createInstructorRequest.Firstname;
-        instructor.Lastname = createInstructorRequest.Lastname;
-        instructor.BirthDate = createInstructorRequest.BirthDate;
-        instructor.NationalityId = createInstructorRequest.NationalityId;
+      Instructor instructor =  mapper.Map<Instructor>(createInstructorRequest);
         await instructorDal.AddAsync(instructor);
-        
+    }
 
+    public async Task<GetListResponse<InstructorResponse>> GetAll(PageRequest pageRequest)
+    {
+        IPaginate<Instructor> result= await instructorDal.GetListAsync(index:pageRequest.Index,size:pageRequest.Size);
 
+        return mapper.Map<GetListResponse<InstructorResponse>>(result); 
     }
 }

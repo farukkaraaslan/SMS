@@ -1,5 +1,11 @@
-﻿using Business.Abstracts;
+﻿using AutoMapper;
+using Business.Abstracts;
 using Business.Dtos.Requests;
+using Business.Dtos.Response;
+using Business.Dtos.Responses;
+using Business.ValidationRules;
+using Core.Aspects.Validation;
+using Core.Paging;
 using DataAccess.Abstract;
 using Entities.Concreate;
 using System;
@@ -8,27 +14,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business.Concreate
+namespace Business.Concreate;
+
+public class StudentManager : IStudentService
 {
-    public class StudentManager : IStudentService
+    private IstudentDal studentdal;
+    private IMapper mapper;
+
+    public StudentManager(IstudentDal studentdal, IMapper mapper)
     {
-        private IstudentDal studentdal;
+        this.studentdal = studentdal;
+        this.mapper = mapper;
+    }
 
-        public StudentManager(IstudentDal studentdal)
-        {
-            this.studentdal = studentdal;
-        }
+    [ValidationAspect(typeof(CreateStudentRequestsValidator))]
+    public async Task Add(CreateStudentRequest createStudentRequest)
+    {
+        Student student = mapper.Map<Student>(createStudentRequest);
+        student.StudentNumber = "202301015001";
+        await studentdal.AddAsync(student);
+    }
 
-        public async Task Add(CreateStudentRequest createStudentRequest)
-        {
-            Student student = new Student();
-            //todo : regex yapılacak
-            student.StudentNumber = "20231234567";
-            student.Firstname = createStudentRequest.Firstname;
-            student.Lastname = createStudentRequest.Lastname;
-            student.BirthDate = createStudentRequest.BirthDate;
-            student.NationalityId= createStudentRequest.NationalityId;
-            await studentdal.AddAsync(student);
-        }
+    public async Task<GetListResponse<StudentResponse>> GetAll(PageRequest pagerequest)
+    {
+        IPaginate<Student> result =await studentdal.GetListAsync(index:pagerequest.Index,size:pagerequest.Size);
+        return  mapper.Map<GetListResponse<StudentResponse>>(result);
     }
 }
