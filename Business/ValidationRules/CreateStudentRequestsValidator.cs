@@ -14,16 +14,16 @@ public class CreateStudentRequestsValidator:AbstractValidator<CreateStudentReque
     {
         RuleFor(c => c.Firstname).NotEmpty().NotNull().MinimumLength(2).MaximumLength(50);
         RuleFor(c => c.Lastname).NotEmpty().NotNull().MinimumLength(2).MaximumLength(50);
-        RuleFor(c => c.NationalityId).Length(11);
+        RuleFor(c => c.NationalityId).Length(11).Must(BeNumeric);
     }
 
     private bool BeNumeric(string arg)
-    { 
+    {
         long nationalityId;
-        if (long.TryParse(arg,out nationalityId))
+        if (long.TryParse(arg, out nationalityId))
         {
-            return false;
+            return true; // Dönüşüm başarılı, arg bir sayısal değerdir
         }
-        return false;
+        return false; // Dönüşüm başarısız, arg sayısal bir değer değildir
     }
 }

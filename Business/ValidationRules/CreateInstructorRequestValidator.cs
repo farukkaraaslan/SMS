@@ -14,16 +14,25 @@ public class CreateInstructorRequestValidator : AbstractValidator<CreateInstruct
     {
         RuleFor(c => c.Firstname).NotEmpty().NotNull().MinimumLength(2).MaximumLength(50);
         RuleFor(c => c.Lastname).NotEmpty().NotNull().MinimumLength(2).MaximumLength(50);
-        RuleFor(c => c.Pbik).Length(7);
-        RuleFor(c => c.NationalityId).Length(11);
+        RuleFor(c => c.Pbik).Length(7).Must(BeNumericPbik);
+        RuleFor(c => c.NationalityId).Length(11).Must(BeNumericNationalityId);
     }
-    private bool BeNumeric(string arg)
+    private bool BeNumericNationalityId(string arg)
     {
         long nationalityId;
         if (long.TryParse(arg, out nationalityId))
         {
-            return false;
+            return true; // Dönüşüm başarılı, arg bir sayısal değerdir
         }
-        return false;
+        return false; // Dönüşüm başarısız, arg sayısal bir değer değildir
+    }
+    private bool BeNumericPbik(string arg)
+    {
+        long pbik;
+        if (long.TryParse(arg, out pbik))
+        {
+            return true; // Dönüşüm başarılı, arg bir sayısal değerdir
+        }
+        return false; // Dönüşüm başarısız, arg sayısal bir değer değildir
     }
 }

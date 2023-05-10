@@ -17,4 +17,5 @@ public class CreateCourseRequestValidator :AbstractValidator<CreateCourseRequest
         RuleFor(c => c.Shortname).NotEmpty().NotNull().MaximumLength(50).MinimumLength(2);
         RuleFor(c => c.Credit).NotEmpty().NotNull().GreaterThan(0).GreaterThanOrEqualTo(100);
     }
+
 }
