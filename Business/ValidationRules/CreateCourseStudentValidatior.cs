@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Business.ValidationRules
 {
-    public class CreateCourseStudentRequestValidatior: AbstractValidator<CreateCourseStudentRequest>
+    public class CreateCourseStudentValidatior: AbstractValidator<CreateCourseStudentRequest>
     {
-        public CreateCourseStudentRequestValidatior()
+        public CreateCourseStudentValidatior()
         {
             RuleFor(c=> c.StudentId).NotEmpty().NotNull();
             RuleFor(c=> c.CourseId).NotEmpty().NotNull();

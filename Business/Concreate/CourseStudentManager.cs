@@ -26,7 +26,7 @@ public class CourseStudentManager : ICourseStudentService
         this.mapper = mapper;
     }
 
-    [ValidationAspect(typeof(CreateCourseStudentRequestValidatior))]
+    [ValidationAspect(typeof(CreateCourseStudentValidatior))]
     public async Task Add(CreateCourseStudentRequest createCourseStudentRequest)
     {
         CourseStudent courseStudent = mapper.Map<CourseStudent>(createCourseStudentRequest);
